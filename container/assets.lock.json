@@ -1,0 +1,22 @@
+{
+  "capa_rules": {
+    "repository": "https://github.com/mandiant/capa-rules.git",
+    "commit": "187e0c97a7cb04a56fd61d3c74a2a717191093d4"
+  },
+  "capa_signatures": {
+    "repository": "https://github.com/mandiant/capa.git",
+    "commit": "7a79f799a70f052e8382cdbeaec8115daba14a5b",
+    "subdirectory": "sigs"
+  },
+  "cape_yara": {
+    "repository": "https://github.com/kevoreilly/CAPEv2.git",
+    "commit": "3f6a2abff0eb7420f0bf78386208fe270fc16945",
+    "subdirectory": "data/yara/CAPE"
+  },
+  "upx": {
+    "version": "5.3.0",
+    "url": "https://github.com/upx/upx/releases/download/v5.3.0/upx-5.3.0-amd64_linux.tar.xz",
+    "sha256": "79cea8a50b6fa102d10c7b79a419cd77dead3cc2d78661de2dc5e5815dc505c1",
+    "member": "upx-5.3.0-amd64_linux/upx"
+  }
+}

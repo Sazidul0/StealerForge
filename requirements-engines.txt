@@ -1,0 +1,7 @@
+# Optional engines run in a separate interpreter from the core application.
+speakeasy-emulator==2.0.0b9
+CAPE-parsers==0.1.73
+flare-floss==3.2.0
+flare-capa==9.4.0
+# CAPE's community Vidar parser imports NumPy; it is not installed by CAPE-parsers.
+numpy==2.2.6

@@ -1,0 +1,42 @@
+x-restrictions: &restrictions
+  platform: linux/amd64
+  network_mode: none
+  read_only: true
+  init: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  mem_limit: 4g
+  memswap_limit: 4g
+  cpus: 2.0
+  tmpfs:
+    - /tmp:size=1g,mode=1777,noexec,nosuid,nodev
+    - /home/analyst:size=128m,uid=1000,gid=1000,mode=0700
+
+services:
+  analyze:
+    <<: *restrictions
+    build:
+      context: .
+      target: runtime
+    image: stealerforge-analysis:local
+    volumes:
+      - type: bind
+        source: ./samples
+        target: /samples
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./output
+        target: /output
+        bind:
+          create_host_path: false
+
+  test:
+    <<: *restrictions
+    profiles: [test]
+    build:
+      context: .
+      target: test
+    image: stealerforge-tests:local

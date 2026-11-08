@@ -1,0 +1,49 @@
+{
+  "windows_image": "dockurr/windows@sha256:16fd7c39a3e48bb946d29c59dc6015942e5b900a1fa5d7e5552053bfc48ee2ea",
+  "cape_commit": "3f6a2abff0eb7420f0bf78386208fe270fc16945",
+  "community_commit": "8056eedab2eb05516f28d5a75c332964d0136624",
+  "python_url": "https://www.python.org/ftp/python/3.12.10/python-3.12.10-amd64.exe",
+  "python_sha256": "67b5635e80ea51072b87941312d00ec8927c4db9ba18938f7ad2d27b328b95fb",
+  "guest_assets": {
+    "firefox": {
+      "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/159.0.1/win64/en-US/Firefox%20Setup%20159.0.1.msi",
+      "file": "firefox.msi",
+      "sha256": "5e9e344fcf409d07351c20814b17214d59c39e3669142b8b7267556bb394577b",
+      "signer": "Mozilla Corporation",
+      "max_bytes": 268435456
+    },
+    "chrome": {
+      "url": "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi",
+      "file": "chrome.msi",
+      "sha256": null,
+      "signer": "Google LLC",
+      "max_bytes": 536870912
+    },
+    "edge": {
+      "url": "https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/d0a4e3fc-604a-4d46-8fd6-e90de2df72f6/MicrosoftEdgeEnterpriseX64.msi",
+      "file": "edge.msi",
+      "sha256": "784051ebfcc8b28569127f381d515766866c4925312d35c52293382b97eef2fb",
+      "signer": "Microsoft Corporation",
+      "max_bytes": 536870912
+    },
+    "sysmon": {
+      "url": "https://download.sysinternals.com/files/Sysmon.zip",
+      "file": "Sysmon.zip",
+      "sha256": null,
+      "signer": "Microsoft Corporation",
+      "max_bytes": 33554432
+    },
+    "pycryptodome": {
+      "url": "https://files.pythonhosted.org/packages/e1/52/7d0830ccb961c9e7224b88a60df1a4eab7fa6c5fd426d7b7c972988a4cac/pycryptodome-4.3.0-cp39-abi3-win_amd64.whl",
+      "file": "wheels/pycryptodome-4.3.0-cp39-abi3-win_amd64.whl",
+      "sha256": "195c9d781905605b3b9de8567c47986a9d0ee513566b5150eb9400692465b610",
+      "max_bytes": 16777216
+    },
+    "pywintrace": {
+      "url": "https://files.pythonhosted.org/packages/a4/ea/975a137b05faef08389c41cb51c346697bd9bbf35c51b1e52cda728932ba/pywintrace-0.2.0-py3-none-any.whl",
+      "file": "wheels/pywintrace-0.2.0-py3-none-any.whl",
+      "sha256": "f3a8e71794ca23cbdaf8a1b0cfb3461540da8d3812fbd8531ab3edaf0657cc56",
+      "max_bytes": 4194304
+    }
+  }
+}

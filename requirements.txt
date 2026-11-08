@@ -1,0 +1,13 @@
+requests>=2.32.0,<3
+pefile>=2024.8.26
+lief>=0.16,<0.18
+yara-python>=4.5.1,<5
+anthropic>=0.49,<1
+pyyaml>=6.0.2,<7
+rich>=13.9,<15
+pyperclip>=1.9,<2
+pysigma>=0.11,<2
+plyara>=2.1,<3
+pyzipper>=0.4,<0.5
+python-evtx>=0.8.1,<0.9
+defusedxml>=0.7.1,<0.8

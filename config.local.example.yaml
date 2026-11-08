@@ -1,0 +1,9 @@
+# Per-machine overrides. Copy to config.local.yaml (ignored by git) and run with:
+#   .venv/bin/python main.py -c config.local.yaml --managed -f /path/to/sample.exe
+# Settings left out here use the built-in defaults. Relative paths resolve beside this file.
+managed_lab:
+  # Dedicated directory on a data disk for VM images and retained evidence. Never a disk root.
+  storage_directory: /media/you/LabDisk/StealerForge-Lab
+  state_directory: .managed
+  # Lower slightly only if your host sits just under the 8 GiB available-RAM check.
+  # min_available_gib: 7

@@ -1,0 +1,116 @@
+# Relative paths are resolved beside this file. Credentials come from the environment.
+cape:
+  base_url: "http://192.168.1.50:8000/apiv2"
+  api_token_env: "CAPE_API_TOKEN"
+  vm_tags: ""
+  route: "inetsim"
+  timeout_seconds: 180
+  poll_interval_seconds: 10
+  max_wait_seconds: 900
+  request_timeout_seconds: 30
+  enforce_timeout: true
+  # Monitor support depends on your CAPE/capemon build; verify these in the lab.
+  options: "procmemdump=1,import_reconstruction=1"
+  package: ""
+  download_unpacked_payloads: true
+  download_dropped_files: true
+  download_pcap: true
+  max_artifacts: 20
+  max_download_bytes: 134217728
+  max_report_bytes: 268435456
+
+static_analysis:
+  yara_rules_path: "rules/local_stealer_hunting.yar"
+  min_string_length: 6
+  max_strings_per_binary: 800
+  max_file_bytes: 134217728
+  yara_timeout_seconds: 30
+
+token_maximizer:
+  target_token_budget: 100000
+  chars_per_token_estimate: 3.0
+  max_api_calls_per_process: 450
+
+llm:
+  use_api: false
+  api_key_env: "ANTHROPIC_API_KEY"
+  model: "claude-sonnet-4-6"
+  max_output_tokens: 16384
+  context_window_tokens: 200000
+  input_token_budget: 110000
+  timeout_seconds: 300
+  copy_to_clipboard: false
+  prompt_caching: true
+  # TLP marking written into the report; ti2dac uses it to decide which AI providers may read it.
+  report_tlp: "clear"
+
+enrichment:
+  # Optional, separately installed executables; never execute the sample itself.
+  capa_path: ""
+  floss_path: ""
+  capa_rules_path: ""
+  capa_signatures_path: ""
+  timeout_seconds: 120
+  max_output_bytes: 16777216
+  memory_mb: 2048
+
+# Optional preprocessing/emulation. Disabled on the ordinary workstation by default.
+local_analysis:
+  enabled: false
+  python_path: ""  # Separate interpreter with requirements-engines.lock installed
+  upx_path: ""
+  cape_yara_path: ""
+  parser_names: []  # Otherwise selected by matched CAPE YARA cape_type metadata
+  speakeasy: true
+  cape_parsers: true
+  all_entrypoints: false
+  timeout_seconds: 120
+  emulation_seconds: 45
+  max_api_calls: 10000
+  max_instructions: 2000000
+  memory_mb: 2048
+  max_input_artifacts: 4
+  max_generated_artifacts: 24
+  max_generated_bytes: 134217728
+  max_region_bytes: 8388608
+  max_output_bytes: 33554432
+  yara_timeout_seconds: 10
+  max_parsers_per_artifact: 8
+
+output:
+  directory: "output"
+  # Host workflow preserves evidence files. The container overrides this to false.
+  retain_artifacts: true
+  scratch_directory: /tmp
+
+# Host orchestration; first use installs Windows, then validates CAPE with a benign probe.
+# Use --lab-storage to select a dedicated HDD directory. Never point at the disk root.
+managed_lab:
+  storage_directory: managed-data
+  state_directory: .managed
+  min_free_gib: 80
+  reserve_free_gib: 8
+  min_available_gib: 8
+  provision_timeout_seconds: 7200
+  boot_timeout_seconds: 900
+  analysis_seconds: 300
+  task_timeout_seconds: 1200
+  enrichment_timeout_seconds: 3600
+  max_enrichment_artifacts: 8
+  # Re-run once with missing folders created when a sample quits after failing to write under another
+  # user's profile (typical of developer builds that log to their author's machine).
+  adaptive_rerun: true
+  # Guest CPU identity: default (Hyper-V enlightenments, "Microsoft Hv" vendor), hyperv (also hide KVM leaves)
+  # or bare (no hypervisor bit). hyperv and bare broke the CAPE monitor in validation; see core/managed_lab.py.
+  cpu_identity: default
+  # CAPE monitor options for managed tasks. capemon disables a hook once one API reaches api-cap (5000 by
+  # default); in heavily threaded samples (Go DDoS bots) that hook removal has crashed the process.
+  monitor_options: "procmemdump=1,import_reconstruction=1"
+  guest_cpus: 4
+  # Address the simulated internet reports to IP-lookup services (a documentation range by default).
+  public_ip: "203.0.113.24"
+  # Victim persona for new bases; empty values are generated randomly per base (see managed/persona.py).
+  persona_username: ""
+  persona_hostname: ""
+  persona_organization: ""
+  persona_timezone: ""

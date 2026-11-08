@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# LIVE MALWARE: never commit samples, archives, payloads or memory dumps.
+# ---------------------------------------------------------------------------
+samples/
+*.zip
+*.7z
+*.rar
+*.gz
+*.tgz
+*.xz
+*.bin
+*.exe
+*.dll
+*.sys
+*.scr
+*.msi
+*.dmp
+*.mem
+*.pcap
+*.pcapng
+*.qcow2
+*.iso
+*.vhd
+*.vhdx
+
+# ---------------------------------------------------------------------------
+# Analysis results and lab state (stay on this machine)
+# ---------------------------------------------------------------------------
+output/
+managed-data/
+.managed/
+vendor/
+
+# ---------------------------------------------------------------------------
+# Machine-specific configuration and secrets
+# (copy config.local.example.yaml to config.local.yaml)
+# ---------------------------------------------------------------------------
+config.local.yaml
+*.local.yaml
+!config.local.example.yaml
+.env
+.env.*
+*.key
+*.pem
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+.venv/
+.venv-*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# ---------------------------------------------------------------------------
+# Editors, OS and local agent settings
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+.claude/settings.local.json

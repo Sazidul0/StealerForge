@@ -1,0 +1,73 @@
+<!-- StealerForge sandbox Sysmon configuration: broad by design, noise is filtered on the host by process tree. -->
+<Sysmon schemaversion="4.90">
+  <HashAlgorithms>SHA256,IMPHASH</HashAlgorithms>
+  <CheckRevocation>False</CheckRevocation>
+  <DnsLookup>False</DnsLookup>
+  <EventFiltering>
+    <RuleGroup name="all-events" groupRelation="or">
+      <ProcessCreate onmatch="exclude"/>
+      <ProcessTerminate onmatch="exclude"/>
+      <NetworkConnect onmatch="exclude"/>
+      <DriverLoad onmatch="exclude"/>
+      <CreateRemoteThread onmatch="exclude"/>
+      <RawAccessRead onmatch="exclude"/>
+      <FileCreate onmatch="exclude"/>
+      <FileCreateStreamHash onmatch="exclude"/>
+      <PipeEvent onmatch="exclude"/>
+      <WmiEvent onmatch="exclude"/>
+      <DnsQuery onmatch="exclude"/>
+      <FileDeleteDetected onmatch="exclude"/>
+      <ProcessTampering onmatch="exclude"/>
+    </RuleGroup>
+    <RuleGroup name="image-loads" groupRelation="or">
+      <ImageLoad onmatch="include">
+        <ImageLoaded condition="begin with">C:\Users\</ImageLoaded>
+        <ImageLoaded condition="begin with">C:\ProgramData\</ImageLoaded>
+        <ImageLoaded condition="begin with">C:\Windows\Temp\</ImageLoaded>
+        <ImageLoaded condition="contains">\Mozilla Firefox\</ImageLoaded>
+        <ImageLoaded condition="end with">\nss3.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\mozglue.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\vaultcli.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\winsqlite3.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\sqlite3.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\dbghelp.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\samlib.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\clr.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\clrjit.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\System.Management.Automation.ni.dll</ImageLoaded>
+        <ImageLoaded condition="end with">\amsi.dll</ImageLoaded>
+      </ImageLoad>
+    </RuleGroup>
+    <RuleGroup name="process-access" groupRelation="or">
+      <ProcessAccess onmatch="include">
+        <TargetImage condition="end with">\lsass.exe</TargetImage>
+        <TargetImage condition="end with">\chrome.exe</TargetImage>
+        <TargetImage condition="end with">\msedge.exe</TargetImage>
+        <TargetImage condition="end with">\firefox.exe</TargetImage>
+        <TargetImage condition="end with">\brave.exe</TargetImage>
+        <TargetImage condition="end with">\Telegram.exe</TargetImage>
+        <TargetImage condition="end with">\Discord.exe</TargetImage>
+      </ProcessAccess>
+    </RuleGroup>
+    <RuleGroup name="registry" groupRelation="or">
+      <RegistryEvent onmatch="include">
+        <TargetObject condition="contains">\CurrentVersion\Run</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\Policies\Explorer\Run</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\Winlogon</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\Image File Execution Options</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\Explorer\User Shell Folders</TargetObject>
+        <TargetObject condition="contains">\CurrentVersion\Explorer\Shell Folders</TargetObject>
+        <TargetObject condition="contains">\Schedule\TaskCache</TargetObject>
+        <TargetObject condition="begin with">HKLM\System\CurrentControlSet\Services\</TargetObject>
+        <TargetObject condition="contains">\Windows Defender\</TargetObject>
+        <TargetObject condition="contains">\Environment\</TargetObject>
+        <TargetObject condition="contains">\AppInit_DLLs</TargetObject>
+        <TargetObject condition="contains">\Classes\ms-settings\</TargetObject>
+        <TargetObject condition="contains">\Classes\exefile\</TargetObject>
+        <TargetObject condition="contains">\Software\Microsoft\Office\</TargetObject>
+        <TargetObject condition="contains">\Internet Settings\ProxyServer</TargetObject>
+        <TargetObject condition="contains">\SystemCertificates\</TargetObject>
+      </RegistryEvent>
+    </RuleGroup>
+  </EventFiltering>
+</Sysmon>

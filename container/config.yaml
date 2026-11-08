@@ -1,0 +1,35 @@
+# The container performs local preprocessing/emulation only; it has no CAPE/LLM network.
+static_analysis:
+  yara_rules_path: ../rules/local_stealer_hunting.yar
+  max_file_bytes: 134217728
+llm:
+  use_api: false
+local_analysis:
+  enabled: true
+  python_path: /opt/engines/bin/python
+  upx_path: /opt/assets/upx
+  cape_yara_path: /opt/assets/cape_yara
+  asset_manifest_path: /opt/assets/manifest.json
+  max_input_artifacts: 4
+  max_generated_artifacts: 8
+  max_generated_bytes: 67108864
+  max_region_bytes: 8388608
+  timeout_seconds: 120
+  emulation_seconds: 30
+  max_api_calls: 10000
+  max_instructions: 2000000
+  memory_mb: 2048
+  parser_names: []
+enrichment:
+  capa_path: /opt/engines/bin/capa
+  capa_rules_path: /opt/assets/capa_rules
+  capa_signatures_path: /opt/assets/capa_signatures
+  floss_path: /opt/engines/bin/floss
+  timeout_seconds: 120
+  max_output_bytes: 33554432
+output:
+  directory: /output
+  retain_artifacts: false
+  scratch_directory: /tmp
+safety:
+  require_container_controls: true
