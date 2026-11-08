@@ -8,6 +8,13 @@ and recovered strings. See the [CTI schema and retention contract](docs/CTI-SCHE
 The container analyzes intermediate payloads under `/tmp` and exports selected text
 reports only; ordinary host runs preserve artifacts unless `--ephemeral-artifacts` is used.
 
+> **📖 User guide: [sazidul-islam.gitbook.io/sazidul-islam-docs](https://sazidul-islam.gitbook.io/sazidul-islam-docs)**
+>
+> Start here if you're new. The guide covers malware analysis basics, step-by-step installation
+> and host setup, running the managed Windows lab, reading the evidence, writing and checking
+> threat intelligence reports, and a complete real-world case study (a Salat/WebRAT loader)
+> with screenshots that you can reproduce yourself.
+
 It is an analysis assistant, not a guarantee of complete unpacking, successful credential recovery, exact family attribution, or production-ready detections. A detailed report depends on the evidence actually collected. Optional local engines model native PE execution in Speakeasy; actual Windows execution uses the managed Windows/CAPE workflow or an external CAPE guest.
 
 - [CAPE lab setup and artifact collection](docs/README-LAB.md): dedicated Linux host, Windows guest, simulated internet, API authentication, submission and retrieval.
@@ -39,6 +46,9 @@ Use the separate lab machine for real malware. Docker shares its host kernel and
 `pefile`/LIEF metadata does not replace disassembly. A crypto API call does not prove successful decryption. A connection does not prove that credentials were transmitted. The report prompt explicitly separates observed, inferred and unknown behavior and allows unknown attribution or no generated rules.
 
 ## Installation
+
+For a full walkthrough (system packages, Docker access, KVM, the lab disk and your first run),
+follow the [installation guide](https://sazidul-islam.gitbook.io/sazidul-islam-docs). The short version:
 
 For automated Windows execution on a Linux host with KVM:
 
@@ -363,6 +373,7 @@ StealerForge/
 
 ## Reference documentation
 
+- [StealerForge user guide](https://sazidul-islam.gitbook.io/sazidul-islam-docs): how to set up and use this tool, and how to do the malware analysis around it.
 - [CAPE API v2 routes](https://github.com/kevoreilly/CAPEv2/blob/master/web/apiv2/urls.py) and [analysis artifacts](https://capev2.readthedocs.io/en/latest/usage/results.html).
 - [Anthropic token counting](https://platform.claude.com/docs/en/build-with-claude/token-counting) and [model lifecycle](https://platform.claude.com/docs/en/about-claude/model-deprecations).
 - [Sigma tooling and backend concepts](https://sigmahq.io/docs/guide/getting-started.html).
