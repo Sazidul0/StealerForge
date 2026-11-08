@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1190" viewBox="0 0 900 1190" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <title>StealerForge analysis pipeline</title>
+  <desc>How StealerForge analyses a Windows infostealer sample: static triage on the host, optional local unpacking and emulation, detonation in a disposable managed Windows/CAPE guest with a simulated internet and planted canaries, normalized evidence, offline reports, rule checks and an optional AI-written CTI report.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f141c"/>
+      <stop offset="1" stop-color="#151b26"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#232c3b"/>
+      <stop offset="1" stop-color="#1a212d"/>
+    </linearGradient>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4c9aff"/></marker>
+    <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#3fbf7f"/></marker>
+    <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b48cff"/></marker>
+    <style>
+      .t  { fill:#f2f5f9; font-size:16px; font-weight:700; text-anchor:middle; }
+      .s  { fill:#9aa7b8; font-size:12.5px; text-anchor:middle; }
+      .l  { fill:#d5dce6; font-size:13px; text-anchor:middle; }
+      .n  { fill:#ffffff; font-size:13px; font-weight:700; text-anchor:middle; }
+      .tl { fill:url(#tile); stroke:#3a4659; stroke-width:1.5; }
+      .ic { fill:none; stroke:#cfd8e3; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+    </style>
+  </defs>
+
+  <rect width="900" height="1190" fill="url(#bg)"/>
+  <!-- decorative code snippets, like a console backdrop -->
+  <g fill="#2a3444" font-family="monospace" font-size="8">
+    <text x="760" y="22">sha256 = hash(sample)</text>
+    <text x="760" y="32">pe = parse_pe(sample)</text>
+    <text x="760" y="42">yara.scan(rules)</text>
+    <text x="22" y="1172">evidence.json  E0000001..E00NNNNN  manifest.json</text>
+  </g>
+
+  <!-- Title -->
+  <text x="450" y="46" class="t" style="font-size:24px">StealerForge Analysis Pipeline</text>
+  <text x="450" y="70" class="s" style="font-size:13.5px">Defensive analysis of Windows infostealers · samples never run on the host</text>
+
+  <!-- ================= Row 1: host side ================= -->
+  <!-- Analyst -->
+  <rect class="tl" x="84" y="114" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <circle cx="120" cy="136" r="9"/>
+    <path d="M102,165 q18,-22 36,0"/>
+    <rect x="104" y="162" width="32" height="14" rx="2" fill="#1a212d"/>
+    <path d="M100,178 h40"/>
+  </g>
+  <text x="120" y="210" class="t">Analyst</text>
+  <text x="120" y="228" class="s">submits sample.exe</text>
+  <text x="120" y="244" class="s">(zip / exe / dll)</text>
+
+  <!-- Static triage -->
+  <rect class="tl" x="374" y="114" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <rect x="390" y="128" width="34" height="42" rx="3"/>
+    <path d="M396,138 h20 M396,146 h14 M396,154 h18"/>
+    <circle cx="424" cy="164" r="8" fill="#1a212d"/>
+    <path d="M430,170 l7,7"/>
+  </g>
+  <text x="410" y="210" class="t">Static Triage (host)</text>
+  <text x="410" y="228" class="s">hashes · PE metadata · YARA · strings</text>
+  <text x="410" y="244" class="s">capa / FLOSS · never executed</text>
+
+  <!-- Local engines -->
+  <rect class="tl" x="714" y="114" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <circle cx="750" cy="150" r="10"/>
+    <path d="M750,128 v8 M750,164 v8 M728,150 h8 M764,150 h8 M734,134 l6,6 M760,160 l6,6 M734,166 l6,-6 M760,140 l6,-6"/>
+  </g>
+  <text x="750" y="210" class="t">Local Engines</text>
+  <text x="750" y="228" class="s">UPX unpack · Speakeasy emulation</text>
+  <text x="750" y="244" class="s">memory capture · config parsers</text>
+
+  <!-- Arrow 1 -->
+  <path d="M164,150 H364" stroke="#4c9aff" stroke-width="2.4" fill="none" marker-end="url(#ab)"/>
+  <text x="264" y="138" class="l">analyse sample</text>
+  <circle cx="264" cy="166" r="11" fill="#2f6fd6"/><text x="264" y="170.5" class="n">1</text>
+  <!-- Arrow 2 -->
+  <path d="M454,150 H704" stroke="#4c9aff" stroke-width="2.4" fill="none" stroke-dasharray="7 5" marker-end="url(#ab)"/>
+  <text x="579" y="138" class="l">unpack &amp; emulate (optional)</text>
+  <circle cx="579" cy="166" r="11" fill="#2f6fd6"/><text x="579" y="170.5" class="n">2</text>
+
+  <!-- ================= Managed lab box ================= -->
+  <rect x="30" y="292" width="840" height="434" rx="18" fill="#121925" stroke="#5a6b84" stroke-width="1.6" stroke-dasharray="9 6"/>
+  <text x="450" y="322" class="l" style="font-size:15px;fill:#c3cddb">Managed Windows / CAPE Lab · disposable KVM guest · sealed network</text>
+
+  <!-- Arrow 3: static triage to guest -->
+  <path d="M410,252 V272 H150 V358" stroke="#4c9aff" stroke-width="2.4" fill="none" marker-end="url(#ab)"/>
+  <text x="280" y="266" class="l">detonate in guest only</text>
+  <circle cx="150" cy="300" r="11" fill="#2f6fd6"/><text x="150" y="304.5" class="n">3</text>
+
+  <!-- Windows guest -->
+  <rect class="tl" x="114" y="366" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <rect x="128" y="380" width="44" height="32" rx="3"/>
+    <path d="M142,420 h16 M150,412 v8"/>
+  </g>
+  <g fill="#4c9aff">
+    <rect x="141" y="387" width="8" height="8"/><rect x="151" y="387" width="8" height="8"/>
+    <rect x="141" y="397" width="8" height="8"/><rect x="151" y="397" width="8" height="8"/>
+  </g>
+  <text x="150" y="462" class="t">Windows Guest</text>
+  <text x="150" y="480" class="s">fake victim persona with planted</text>
+  <text x="150" y="496" class="s">browser / wallet / app canaries</text>
+
+  <!-- CAPE + capemon -->
+  <rect class="tl" x="414" y="366" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <rect x="426" y="380" width="48" height="36" rx="3"/>
+    <path d="M430,400 h9 l5,-11 l7,20 l5,-9 h14"/>
+    <path d="M440,424 h20"/>
+  </g>
+  <text x="450" y="462" class="t">CAPE + capemon</text>
+  <text x="450" y="480" class="s">API calls · process dumps</text>
+  <text x="450" y="496" class="s">dropped files · Sysmon events</text>
+
+  <!-- Simulated internet -->
+  <rect class="tl" x="714" y="366" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <circle cx="750" cy="402" r="20"/>
+    <ellipse cx="750" cy="402" rx="9" ry="20"/>
+    <path d="M730,402 h40 M734,391 h32 M734,413 h32"/>
+  </g>
+  <text x="750" y="462" class="t">Simulated Internet</text>
+  <text x="750" y="480" class="s">netsim: fake DNS · TLS intercept</text>
+  <text x="750" y="496" class="s">TCP sink · PCAP · nothing forwarded</text>
+
+  <!-- Arrow 4, 5 -->
+  <path d="M194,402 H404" stroke="#4c9aff" stroke-width="2.4" fill="none" marker-end="url(#ab)"/>
+  <text x="299" y="390" class="l">monitor execution</text>
+  <circle cx="299" cy="418" r="11" fill="#2f6fd6"/><text x="299" y="422.5" class="n">4</text>
+  <path d="M494,402 H704" stroke="#4c9aff" stroke-width="2.4" fill="none" marker-end="url(#ab)"/>
+  <text x="599" y="390" class="l">capture outbound traffic</text>
+  <circle cx="599" cy="418" r="11" fill="#2f6fd6"/><text x="599" y="422.5" class="n">5</text>
+
+  <!-- Row 3 inside box -->
+  <!-- No real internet -->
+  <rect class="tl" x="114" y="566" width="72" height="72" rx="14" stroke="#7a3b3f"/>
+  <g class="ic" stroke="#e5676c">
+    <circle cx="150" cy="602" r="18"/>
+    <path d="M137,589 l26,26"/>
+  </g>
+  <text x="150" y="662" class="t" style="fill:#ff9da1">No Real Internet</text>
+  <text x="150" y="680" class="s">C2 and sample infrastructure</text>
+  <text x="150" y="696" class="s">are never contacted</text>
+
+  <!-- Guest destroyed -->
+  <rect class="tl" x="414" y="566" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <path d="M432,586 h36 M444,586 v-5 h12 v5"/>
+    <path d="M436,590 l3,32 h22 l3,-32"/>
+    <path d="M445,598 v18 M455,598 v18"/>
+  </g>
+  <text x="450" y="662" class="t">Guest Destroyed</text>
+  <text x="450" y="680" class="s">evidence kept, disposable guest</text>
+  <text x="450" y="696" class="s">and containers removed per run</text>
+
+  <!-- Canary match -->
+  <rect class="tl" x="714" y="566" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <circle cx="738" cy="598" r="9"/>
+    <path d="M747,598 h20 M760,598 v7 M766,598 v5"/>
+  </g>
+  <path d="M742,620 l7,7 l14,-14" fill="none" stroke="#3fbf7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="750" y="662" class="t">Canary Match</text>
+  <text x="750" y="680" class="s">planted values found in captures:</text>
+  <text x="750" y="696" class="s">direct proof of what was stolen</text>
+
+  <!-- Arrow 6 -->
+  <path d="M750,504 V556" stroke="#4c9aff" stroke-width="2.4" fill="none" marker-end="url(#ab)"/>
+  <text x="768" y="534" class="l" style="text-anchor:start">search captures</text>
+  <circle cx="734" cy="530" r="11" fill="#2f6fd6"/><text x="734" y="534.5" class="n">6</text>
+
+  <!-- ================= Evidence + outputs ================= -->
+  <!-- Arrow 7 -->
+  <path d="M450,728 V776" stroke="#3fbf7f" stroke-width="2.4" fill="none" marker-end="url(#ag)"/>
+  <text x="468" y="756" class="l" style="text-anchor:start">retrieve &amp; normalize evidence</text>
+  <circle cx="434" cy="752" r="11" fill="#2b9a63"/><text x="434" y="756.5" class="n">7</text>
+
+  <!-- Evidence -->
+  <rect class="tl" x="414" y="784" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <ellipse cx="450" cy="800" rx="18" ry="6"/>
+    <path d="M432,800 v28 a18,6 0 0 0 36,0 v-28"/>
+    <path d="M432,814 a18,6 0 0 0 36,0"/>
+  </g>
+  <text x="450" y="880" class="t">evidence.json</text>
+  <text x="450" y="898" class="s">stable E-IDs · source pointers</text>
+  <text x="450" y="914" class="s">static + engine + lab · SHA256 manifest</text>
+
+  <!-- Reports -->
+  <rect class="tl" x="114" y="784" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <path d="M134,796 h22 l10,10 v36 h-32 z"/>
+    <path d="M156,796 v10 h10"/>
+    <path d="M140,816 h20 M140,824 h20 M140,832 h14"/>
+  </g>
+  <text x="150" y="880" class="t">Offline Reports</text>
+  <text x="150" y="898" class="s">Evidence_Report.md · threat_intel_report.md</text>
+  <text x="150" y="914" class="s">cape_cti_telemetry.json · no LLM needed</text>
+
+  <!-- Rule checks -->
+  <rect class="tl" x="714" y="784" width="72" height="72" rx="14"/>
+  <g class="ic">
+    <path d="M750,796 l18,7 v14 c0,13 -8,21 -18,26 c-10,-5 -18,-13 -18,-26 v-14 z"/>
+  </g>
+  <path d="M742,820 l6,6 l11,-12" fill="none" stroke="#3fbf7f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="750" y="880" class="t">Rule Checks</text>
+  <text x="750" y="898" class="s">YARA &amp; Sigma compile / parse</text>
+  <text x="750" y="914" class="s">fixture and benign-file tests</text>
+
+  <!-- Arrows 8, 9 -->
+  <path d="M406,820 H196" stroke="#3fbf7f" stroke-width="2.4" fill="none" marker-end="url(#ag)"/>
+  <text x="301" y="808" class="l">write reports</text>
+  <circle cx="301" cy="836" r="11" fill="#2b9a63"/><text x="301" y="840.5" class="n">8</text>
+  <path d="M494,820 H704" stroke="#3fbf7f" stroke-width="2.4" fill="none" marker-end="url(#ag)"/>
+  <text x="599" y="808" class="l">validate rules</text>
+  <circle cx="599" cy="836" r="11" fill="#2b9a63"/><text x="599" y="840.5" class="n">9</text>
+
+  <!-- ================= Bottom ================= -->
+  <!-- Arrow 10 -->
+  <path d="M450,924 V950 H680 V972" stroke="#b48cff" stroke-width="2.2" fill="none" stroke-dasharray="6 5" marker-end="url(#ap)"/>
+  <text x="540" y="942" class="l">optional AI report</text>
+  <circle cx="630" cy="950" r="11" fill="#7d55d6"/><text x="630" y="954.5" class="n" style="font-size:11.5px">10</text>
+
+  <!-- What you get -->
+  <g font-size="14">
+    <text x="44" y="1000" fill="#f2f5f9" font-weight="700" font-size="16">What the analyst gets:</text>
+    <text x="44" y="1026" fill="#c3cddb">API activity, processes, dumps, dropped files,</text>
+    <text x="44" y="1046" fill="#c3cddb">PCAP and simulated-internet requests, decoded</text>
+    <text x="44" y="1066" fill="#c3cddb">configs, stolen-canary hits, ATT&amp;CK mapping,</text>
+    <text x="44" y="1086" fill="#c3cddb">and a SHA256 manifest of every output file</text>
+  </g>
+
+  <!-- AI box -->
+  <rect x="494" y="980" width="372" height="148" rx="12" fill="#17142a" stroke="#9b6cff" stroke-width="2"/>
+  <text x="680" y="1010" class="t" style="font-size:18px">AI CTI Report (optional)</text>
+  <g fill="#d9d1f2" font-size="14">
+    <text x="520" y="1038">• Claude synthesis on a bounded dossier</text>
+    <text x="520" y="1060">• Every claim cites an evidence E-ID</text>
+    <text x="520" y="1082">• check_report.py self-check</text>
+    <text x="520" y="1104">• Markdown for ti2dac + styled PDF</text>
+  </g>
+
+  <!-- Safety footer -->
+  <rect x="30" y="1140" width="840" height="1" fill="#2a3444"/>
+  <text x="450" y="1160" class="s" style="fill:#8794a6">Never executes samples on the host · never contacts C2 · sample strings are treated as untrusted data</text>
+</svg>

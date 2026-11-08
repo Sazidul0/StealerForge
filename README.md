@@ -2,6 +2,10 @@
 
 StealerForge combines local static analysis, optional automated unpacking/emulation, CAPE Sandbox evidence collection, and optional Claude synthesis to help analysts investigate Windows infostealers. It produces a source-linked evidence inventory, a bounded LLM dossier, an offline evidence report, and checks for analyst- or LLM-generated YARA/Sigma rules. AI is optional throughout collection and evidence reporting.
 
+<p align="center">
+  <img src="docs/images/stealerforge-pipeline.svg" alt="StealerForge analysis pipeline: static triage on the host, optional unpacking and emulation, detonation in a disposable managed Windows/CAPE guest with a simulated internet and planted canaries, normalized evidence, offline reports, rule checks and an optional AI CTI report" width="760">
+</p>
+
 The local pipeline also writes **`cape_cti_telemetry.json`** and **`threat_intel_report.md`**
 without an LLM. The advisory covers triage, configuration, ATT&CK, emulated telemetry,
 and recovered strings. See the [CTI schema and retention contract](docs/CTI-SCHEMA.md).
